@@ -74,7 +74,8 @@ export default function Experience() {
                     ref={cubeRef}
                     position={[1.5, 2, 0]}
                     gravityScale={1} // this changes how this single object reacts to the gravity
-                    restitution={1} // controls the "bounciness"
+                    restitution={0} // controls the "bounciness"
+                    friction={0.7} // a friction of 0 (the default value is 0.7) would make the cube slide forever but ONLY, again, if the floor has a friction of 0
                 >
                     <mesh onClick={cubeJump} castShadow>
                         <boxGeometry />
@@ -83,7 +84,7 @@ export default function Experience() {
                 </RigidBody>
 
                 {/*The floor has a default restituion of 0 which can cause unexpected bounciness of the items that boucne on it, so you modify it to 1*/}
-                <RigidBody type="fixed" restitution={1}>
+                <RigidBody type="fixed">
                     <mesh receiveShadow position-y={-1.25}>
                         <boxGeometry args={[10, 0.5, 10]} />
                         <meshStandardMaterial color="greenyellow" />

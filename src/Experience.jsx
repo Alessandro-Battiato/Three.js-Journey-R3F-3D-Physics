@@ -25,12 +25,15 @@ export default function Experience() {
                     The hull is like a plastic membrane to the object, so that the collider can fit the object precisely
                     because we only have the colliders ball and cuboid and both are bad for something like a torus
                     so the hull is perfect to give correct physics to the Torus geometry
+
+                    But for the purpose of the lesson, even though the hull is good for most cases, we want
+                    a precise torus geometry so that the ball can fall inside of it, that's why we use a trimesh
                 */}
-                <RigidBody colliders="hull">
+                <RigidBody colliders="trimesh">
                     <mesh
                         castShadow
                         position={[0, 1, 0]}
-                        rotation={[Math.PI * 0.1, 0, 0]}
+                        rotation={[Math.PI * 0.5, 0, 0]}
                     >
                         <torusGeometry args={[1, 0.5, 16, 32]} />
                         <meshStandardMaterial color="mediumpurple" />

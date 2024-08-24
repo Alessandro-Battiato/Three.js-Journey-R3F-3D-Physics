@@ -12,7 +12,7 @@ export default function Experience() {
             <directionalLight castShadow position={[1, 2, 3]} intensity={4.5} />
             <ambientLight intensity={1.5} />
 
-            <Physics>
+            <Physics debug>
                 {/*Physics aren't enabled by default using the Physics tag, you need to use the RigidBody and items will fall*/}
                 <RigidBody>
                     <mesh castShadow position={[-2, 2, 0]}>

@@ -20,7 +20,11 @@ export default function Experience() {
             a applyTorqueImpulse (equivalent of applyImpulse
         */
         cubeRef.current.applyImpulse({ x: 0, y: 5, z: 0 }); // it needs a Vec3 but we can also provide an obj without creating a new VEC3 using three.js
-        cubeRef.current.applyTorqueImpulse({ x: 0, y: 1, z: 0 });
+        cubeRef.current.applyTorqueImpulse({
+            x: Math.random() - 0.5,
+            y: Math.random() - 0.5,
+            z: Math.random() - 0.5,
+        });
     };
 
     return (

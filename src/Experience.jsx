@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, useGLTF } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import {
     CuboidCollider,
@@ -15,6 +15,8 @@ export default function Experience() {
 
     const cubeRef = useRef(null);
     const twisterRef = useRef(null);
+
+    const hamburger = useGLTF("./hamburger.glb");
 
     const cubeJump = () => {
         /*
@@ -161,6 +163,10 @@ export default function Experience() {
                         <boxGeometry />
                         <meshStandardMaterial color="red" />
                     </mesh>
+                </RigidBody>
+
+                <RigidBody position={[0, 4, 0]}>
+                    <primitive scale={0.3} object={hamburger.scene} />
                 </RigidBody>
             </Physics>
         </>

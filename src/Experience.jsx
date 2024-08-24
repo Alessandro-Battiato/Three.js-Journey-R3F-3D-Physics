@@ -14,7 +14,7 @@ export default function Experience() {
 
             <Physics debug>
                 {/*Physics aren't enabled by default using the Physics tag, you need to use the RigidBody and items will fall*/}
-                <RigidBody>
+                <RigidBody colliders="ball">
                     <mesh castShadow position={[-2, 2, 0]}>
                         <sphereGeometry />
                         <meshStandardMaterial color="orange" />

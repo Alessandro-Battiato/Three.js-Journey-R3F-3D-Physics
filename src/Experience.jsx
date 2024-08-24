@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import {
@@ -7,6 +7,7 @@ import {
     Physics,
     BallCollider,
     CylinderCollider,
+    InstancedRigidBodies,
 } from "@react-three/rapier";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -19,22 +20,50 @@ export default function Experience() {
 
     const hamburger = useGLTF("./hamburger.glb");
 
-    const cubesCount = 3;
-    const cubesRef = useRef(null);
+    const cubesCount = 100;
 
-    useEffect(() => {
-        // All of the following is done, even though is complex, for performance reasons. You can render even 100 cubesCount and all of them will be rendered in one draw call
+    // This is the simplest way using R3F while keeping an eye on the performances
+    const instances = useMemo(() => {
+        const instances = [];
+
         for (let i = 0; i < cubesCount; i++) {
-            // Associate each one of the Matrix4 to the instances of the InstancedMesh with setMatrixAt
-            const matrix = new THREE.Matrix4();
-            matrix.compose(
-                new THREE.Vector3(i * 2, 0, 0),
-                new THREE.Quaternion(), // we won't rotate it so we use the default quaternion
-                new THREE.Vector3(1, 1, 1)
-            );
-            cubesRef.current.setMatrixAt(i, matrix);
+            /*
+                Each objects needs 3 properties:
+
+                key: a random key (used by React)
+                position: an array composed of 3 values for a Vector3 position (x, y and z)
+                rotation: an array composed of 3 values for an Euler rotation (x, y and z)
+            */
+            instances.push({
+                key: "instance_" + i,
+                position: [
+                    (Math.random() - 0.5) * 8,
+                    6 + i * 0.2,
+                    (Math.random() - 0.5) * 8,
+                ], // x, y, z
+                rotation: [Math.random(), Math.random(), Math.random()], // x, y, z
+            });
         }
+
+        return instances;
     }, []);
+    // const cubesRef = useRef(null);
+
+    /* This was the vanilla THREE.js way, we don't need it anymore
+        useEffect(() => {
+            // All of the following is done, even though is complex, for performance reasons. You can render even 100 cubesCount and all of them will be rendered in one draw call
+            for (let i = 0; i < cubesCount; i++) {
+                // Associate each one of the Matrix4 to the instances of the InstancedMesh with setMatrixAt
+                const matrix = new THREE.Matrix4();
+                matrix.compose(
+                    new THREE.Vector3(i * 2, 0, 0),
+                    new THREE.Quaternion(), // we won't rotate it so we use the default quaternion
+                    new THREE.Vector3(1, 1, 1)
+                );
+                cubesRef.current.setMatrixAt(i, matrix);
+            }
+        }, []);
+    */
 
     const cubeJump = () => {
         /*
@@ -210,14 +239,16 @@ export default function Experience() {
                 
                     The instancedMesh needs the Matrices in order for it to work, so you apply them on the first render using useEffect
                 */}
-                <instancedMesh
-                    castShadow
-                    ref={cubesRef}
-                    args={[null, null, cubesCount]}
-                >
-                    <boxGeometry />
-                    <meshStandardMaterial color="tomato" />
-                </instancedMesh>
+                <InstancedRigidBodies instances={instances}>
+                    <instancedMesh
+                        castShadow
+                        // ref={cubesRef} no longer needed thanks to R3F
+                        args={[null, null, cubesCount]}
+                    >
+                        <boxGeometry />
+                        <meshStandardMaterial color="tomato" />
+                    </instancedMesh>
+                </InstancedRigidBodies>
             </Physics>
         </>
     );

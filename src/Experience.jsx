@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import {
@@ -18,6 +18,23 @@ export default function Experience() {
     const twisterRef = useRef(null);
 
     const hamburger = useGLTF("./hamburger.glb");
+
+    const cubesCount = 3;
+    const cubesRef = useRef(null);
+
+    useEffect(() => {
+        // All of the following is done, even though is complex, for performance reasons. You can render even 100 cubesCount and all of them will be rendered in one draw call
+        for (let i = 0; i < cubesCount; i++) {
+            // Associate each one of the Matrix4 to the instances of the InstancedMesh with setMatrixAt
+            const matrix = new THREE.Matrix4();
+            matrix.compose(
+                new THREE.Vector3(i * 2, 0, 0),
+                new THREE.Quaternion(), // we won't rotate it so we use the default quaternion
+                new THREE.Vector3(1, 1, 1)
+            );
+            cubesRef.current.setMatrixAt(i, matrix);
+        }
+    }, []);
 
     const cubeJump = () => {
         /*
@@ -183,6 +200,24 @@ export default function Experience() {
                         position={[-5.5, 1, 0]}
                     />
                 </RigidBody>
+
+                {/*
+                    InstancedMesh: A special version of Mesh with instanced rendering support. 
+                    Use InstancedMesh if you have to render a large number of objects with the same geometry and material(s) but with different world transformations. 
+                    The usage of InstancedMesh will help you to reduce the number of draw calls and thus improve the overall rendering performance in your application.
+                   
+                    The instancedMesh accepts 3 parameters, the first 2 being geometry and material, since we always provide them as children tags, we need to provide null as the first two parameters like we are doing now 
+                
+                    The instancedMesh needs the Matrices in order for it to work, so you apply them on the first render using useEffect
+                */}
+                <instancedMesh
+                    castShadow
+                    ref={cubesRef}
+                    args={[null, null, cubesCount]}
+                >
+                    <boxGeometry />
+                    <meshStandardMaterial color="tomato" />
+                </instancedMesh>
             </Physics>
         </>
     );

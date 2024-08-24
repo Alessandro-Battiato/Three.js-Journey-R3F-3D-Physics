@@ -76,11 +76,17 @@ export default function Experience() {
                     gravityScale={1} // this changes how this single object reacts to the gravity
                     restitution={0} // controls the "bounciness"
                     friction={0.7} // a friction of 0 (the default value is 0.7) would make the cube slide forever but ONLY, again, if the floor has a friction of 0
+                    // The mass cannot be set directly as a prop of the rigid body, because it's obtained as a sum of all of the colliders that make up the object, so we are going to use a custom collider
+                    colliders={false} // (Bigger objects = bigger mass) We find ourselves in a "void" context, not in real life, where a feather would fall slower than steel, so higher mass doesn't mean higher falling speed
                 >
                     <mesh onClick={cubeJump} castShadow>
                         <boxGeometry />
                         <meshStandardMaterial color="mediumpurple" />
                     </mesh>
+                    <CuboidCollider
+                        args={[0.5, 0.5, 0.5]}
+                        mass={500} // this WON'T make the cube fall FASTER, but if you click on it to make it jump, the lower the value is the HIGHER the cube will jump
+                    />
                 </RigidBody>
 
                 {/*The floor has a default restituion of 0 which can cause unexpected bounciness of the items that boucne on it, so you modify it to 1*/}

@@ -118,6 +118,9 @@ export default function Experience() {
                     // The mass cannot be set directly as a prop of the rigid body, because it's obtained as a sum of all of the colliders that make up the object, so we are going to use a custom collider
                     colliders={false} // (Bigger objects = bigger mass) We find ourselves in a "void" context, not in real life, where a feather would fall slower than steel, so higher mass doesn't mean higher falling speed
                     onCollisionEnter={collisionEnter}
+                    // onCollisionExit={() => console.log("exit")}
+                    // onSleep={() => console.log("sleeping")} // when an item doesn't move after a certain period of time, Rapier stops testing it against collisions for performance reasons
+                    // onWake={() => console.log("wake up")}
                 >
                     <mesh onClick={cubeJump} castShadow>
                         <boxGeometry />

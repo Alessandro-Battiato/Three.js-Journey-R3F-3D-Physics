@@ -6,6 +6,7 @@ import {
     RigidBody,
     Physics,
     BallCollider,
+    CylinderCollider,
 } from "@react-three/rapier";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -165,8 +166,9 @@ export default function Experience() {
                     </mesh>
                 </RigidBody>
 
-                <RigidBody position={[0, 4, 0]}>
+                <RigidBody colliders={false} position={[0, 4, 0]}>
                     <primitive scale={0.3} object={hamburger.scene} />
+                    <CylinderCollider args={[0.8, 1.4]} />
                 </RigidBody>
             </Physics>
         </>

@@ -39,6 +39,12 @@ export default function Experience() {
         const quaternionRotation = new THREE.Quaternion();
         quaternionRotation.setFromEuler(eulerRotation); // This is friendly for the value needed by the setNextKinematicRotation
         twisterRef.current.setNextKinematicRotation(quaternionRotation);
+
+        // Trigonometry, to make it move in a circle
+        const angle = time * 0.5;
+        const x = Math.cos(angle) * 2;
+        const z = Math.sin(angle) * 2;
+        twisterRef.current.setNextKinematicTranslation({ x, y: -0.8, z }); // the y is set to -0.8 because we set the same value for the position of the RigidBody hosting the twister
     });
 
     return (

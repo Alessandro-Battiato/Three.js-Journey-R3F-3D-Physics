@@ -70,14 +70,20 @@ export default function Experience() {
 
                 */}
 
-                <RigidBody ref={cubeRef} position={[1.5, 2, 0]}>
+                <RigidBody
+                    ref={cubeRef}
+                    position={[1.5, 2, 0]}
+                    gravityScale={1} // this changes how this single object reacts to the gravity
+                    restitution={1} // controls the "bounciness"
+                >
                     <mesh onClick={cubeJump} castShadow>
                         <boxGeometry />
                         <meshStandardMaterial color="mediumpurple" />
                     </mesh>
                 </RigidBody>
 
-                <RigidBody type="fixed">
+                {/*The floor has a default restituion of 0 which can cause unexpected bounciness of the items that boucne on it, so you modify it to 1*/}
+                <RigidBody type="fixed" restitution={1}>
                     <mesh receiveShadow position-y={-1.25}>
                         <boxGeometry args={[10, 0.5, 10]} />
                         <meshStandardMaterial color="greenyellow" />

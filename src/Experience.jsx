@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { OrbitControls } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import {
@@ -11,6 +11,8 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 export default function Experience() {
+    const [hitSound] = useState(() => new Audio("./hit.mp3"));
+
     const cubeRef = useRef(null);
     const twisterRef = useRef(null);
 
@@ -46,6 +48,23 @@ export default function Experience() {
         const z = Math.sin(angle) * 2;
         twisterRef.current.setNextKinematicTranslation({ x, y: -0.8, z }); // the y is set to -0.8 because we set the same value for the position of the RigidBody hosting the twister
     });
+
+    /* 
+        We can listen to events by adding attributes directly on the <RigidBody>.
+
+        There are 4 different events:
+
+        onCollisionEnter: when the RigidBody hit something.
+        onCollisionExit: when the RigidBody separates from the object it just hit.
+        onSleep: when the RigidBody starts sleeping.
+        onWake: when the RigidBody stops sleeping.
+
+    */
+    const collisionEnter = () => {
+        hitSound.currentTime = 0;
+        hitSound.volume = Math.random();
+        hitSound.play();
+    };
 
     return (
         <>
@@ -98,6 +117,7 @@ export default function Experience() {
                     friction={0.7} // a friction of 0 (the default value is 0.7) would make the cube slide forever but ONLY, again, if the floor has a friction of 0
                     // The mass cannot be set directly as a prop of the rigid body, because it's obtained as a sum of all of the colliders that make up the object, so we are going to use a custom collider
                     colliders={false} // (Bigger objects = bigger mass) We find ourselves in a "void" context, not in real life, where a feather would fall slower than steel, so higher mass doesn't mean higher falling speed
+                    onCollisionEnter={collisionEnter}
                 >
                     <mesh onClick={cubeJump} castShadow>
                         <boxGeometry />

@@ -1,6 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 import { Perf } from "r3f-perf";
-import { RigidBody, Physics } from "@react-three/rapier";
+import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
 
 export default function Experience() {
     return (
@@ -28,13 +28,16 @@ export default function Experience() {
 
                     But for the purpose of the lesson, even though the hull is good for most cases, we want
                     a precise torus geometry so that the ball can fall inside of it, that's why we use a trimesh
+                
+                    DISCLAIMER: It's still not good to use trimesh with dynamic rigid bodies, because this can lead to bugs, especially with FAST objects, so static objects should be okay
                 */}
-                <RigidBody colliders="trimesh">
-                    <mesh
-                        castShadow
-                        position={[0, 1, 0]}
-                        rotation={[Math.PI * 0.5, 0, 0]}
-                    >
+                <RigidBody
+                    colliders={false}
+                    position={[0, 1, 0]}
+                    rotation={[Math.PI * 0.5, 0, 0]}
+                >
+                    <CuboidCollider args={[1.5, 1.5, 0.5]} />
+                    <mesh castShadow>
                         <torusGeometry args={[1, 0.5, 16, 32]} />
                         <meshStandardMaterial color="mediumpurple" />
                     </mesh>

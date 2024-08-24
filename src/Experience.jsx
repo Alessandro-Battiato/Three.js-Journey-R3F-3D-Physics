@@ -36,7 +36,8 @@ export default function Experience() {
             <directionalLight castShadow position={[1, 2, 3]} intensity={4.5} />
             <ambientLight intensity={1.5} />
 
-            <Physics debug>
+            {/*The gravity is set to a default of -9.81 on the y axis to simulate the Earth's*/}
+            <Physics debug gravity={[0, -9.81, 0]}>
                 {/*Physics aren't enabled by default using the Physics tag, you need to use the RigidBody and items will fall*/}
                 <RigidBody colliders="ball">
                     <mesh castShadow position={[-1.5, 2, 0]}>

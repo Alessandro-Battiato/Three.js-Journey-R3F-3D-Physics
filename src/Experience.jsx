@@ -21,7 +21,12 @@ export default function Experience() {
                     </mesh>
                 </RigidBody>
 
-                <RigidBody>
+                {/*
+                    The hull is like a plastic membrane to the object, so that the collider can fit the object precisely
+                    because we only have the colliders ball and cuboid and both are bad for something like a torus
+                    so the hull is perfect to give correct physics to the Torus geometry
+                */}
+                <RigidBody colliders="hull">
                     <mesh
                         castShadow
                         position={[0, 1, 0]}

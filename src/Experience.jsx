@@ -21,10 +21,16 @@ export default function Experience() {
                     </mesh>
                 </RigidBody>
 
-                <mesh castShadow position={[2, 2, 0]}>
-                    <boxGeometry />
-                    <meshStandardMaterial color="mediumpurple" />
-                </mesh>
+                <RigidBody>
+                    <mesh castShadow position={[2, 2, 0]}>
+                        <boxGeometry args={[3, 2, 1]} />
+                        <meshStandardMaterial color="mediumpurple" />
+                    </mesh>
+                    <mesh castShadow position={[2, 2, 3]}>
+                        <boxGeometry args={[1, 1, 1]} />
+                        <meshStandardMaterial color="mediumpurple" />
+                    </mesh>
+                </RigidBody>
 
                 <RigidBody type="fixed">
                     <mesh receiveShadow position-y={-1.25}>

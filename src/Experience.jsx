@@ -1,5 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 import { Perf } from "r3f-perf";
+import { RigidBody, Physics } from "@react-three/rapier";
 
 export default function Experience() {
     return (
@@ -11,20 +12,27 @@ export default function Experience() {
             <directionalLight castShadow position={[1, 2, 3]} intensity={4.5} />
             <ambientLight intensity={1.5} />
 
-            <mesh castShadow position={[-2, 2, 0]}>
-                <sphereGeometry />
-                <meshStandardMaterial color="orange" />
-            </mesh>
+            <Physics>
+                {/*Physics aren't enabled by default using the Physics tag, you need to use the RigidBody and items will fall*/}
+                <RigidBody>
+                    <mesh castShadow position={[-2, 2, 0]}>
+                        <sphereGeometry />
+                        <meshStandardMaterial color="orange" />
+                    </mesh>
+                </RigidBody>
 
-            <mesh castShadow position={[2, 2, 0]}>
-                <boxGeometry />
-                <meshStandardMaterial color="mediumpurple" />
-            </mesh>
+                <mesh castShadow position={[2, 2, 0]}>
+                    <boxGeometry />
+                    <meshStandardMaterial color="mediumpurple" />
+                </mesh>
 
-            <mesh receiveShadow position-y={-1.25}>
-                <boxGeometry args={[10, 0.5, 10]} />
-                <meshStandardMaterial color="greenyellow" />
-            </mesh>
+                <RigidBody type="fixed">
+                    <mesh receiveShadow position-y={-1.25}>
+                        <boxGeometry args={[10, 0.5, 10]} />
+                        <meshStandardMaterial color="greenyellow" />
+                    </mesh>
+                </RigidBody>
+            </Physics>
         </>
     );
 }

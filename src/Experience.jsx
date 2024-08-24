@@ -7,9 +7,12 @@ import {
     Physics,
     BallCollider,
 } from "@react-three/rapier";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 
 export default function Experience() {
     const cubeRef = useRef(null);
+    const twisterRef = useRef(null);
 
     const cubeJump = () => {
         /*
@@ -27,6 +30,16 @@ export default function Experience() {
             z: Math.random() - 0.5,
         });
     };
+
+    useFrame((state) => {
+        // setNextKinematicRotation wants a Quaternion and not a Euler which makes things harder, so we just use a Euler and turn it into a Quaternion
+        const time = state.clock.getElapsedTime();
+
+        const eulerRotation = new THREE.Euler(0, time * 3, 0); // original solution using only the EULER, multiply by 3 to make it faster
+        const quaternionRotation = new THREE.Quaternion();
+        quaternionRotation.setFromEuler(eulerRotation); // This is friendly for the value needed by the setNextKinematicRotation
+        twisterRef.current.setNextKinematicRotation(quaternionRotation);
+    });
 
     return (
         <>
@@ -73,7 +86,7 @@ export default function Experience() {
 
                 <RigidBody
                     ref={cubeRef}
-                    position={[1.5, 2, 0]}
+                    position={[1.5, 2, 0]} // DO NOT change position nor rotation at RUNTIME, these are used for initial positions, so they need to be the same after build time, if you really need to do something like this, you need to use the kinematic methods
                     gravityScale={1} // this changes how this single object reacts to the gravity
                     restitution={0} // controls the "bounciness"
                     friction={0.7} // a friction of 0 (the default value is 0.7) would make the cube slide forever but ONLY, again, if the floor has a friction of 0
@@ -95,6 +108,29 @@ export default function Experience() {
                     <mesh receiveShadow position-y={-1.25}>
                         <boxGeometry args={[10, 0.5, 10]} />
                         <meshStandardMaterial color="greenyellow" />
+                    </mesh>
+                </RigidBody>
+
+                <RigidBody
+                    /*
+                        But what if we really want to have an object that we can move and rotate? It can be the player or it can be a carousel and we don’t want to use unpredictable forces. We want them to move and rotate at an exact speed.
+
+                        And that’s exactly the purpose of the kinematicPosition and kinematicVelocity types.
+
+                        The difference between the kinematicPosition and the kinematicVelocity is how we update them.
+
+                        For the kinematicPosition, we provide the next position and it’ll update the object velocity accordingly.
+
+                        For the kinematicVelocity, we provide the velocity directly.
+                    */
+                    ref={twisterRef}
+                    position={[0, -0.8, 0]}
+                    friction={0}
+                    type="kinematicPosition"
+                >
+                    <mesh castShadow scale={[0.4, 0.4, 3]}>
+                        <boxGeometry />
+                        <meshStandardMaterial color="red" />
                     </mesh>
                 </RigidBody>
             </Physics>

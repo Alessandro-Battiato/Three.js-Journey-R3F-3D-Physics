@@ -19,7 +19,8 @@ export default function Experience() {
             The keyword for a rotation is torque and, if you check the RigidBody documentation, you’ll find both a addTorque (equivalent of addForce) and 
             a applyTorqueImpulse (equivalent of applyImpulse
         */
-        cubeRef.current.applyImpulse({ x: 0, y: 5, z: 0 }); // it needs a Vec3 but we can also provide an obj without creating a new VEC3 using three.js
+        const mass = cubeRef.current.mass(); // the higher y's value the stronger will be the jump
+        cubeRef.current.applyImpulse({ x: 0, y: 5 * mass, z: 0 }); // it needs a Vec3 but we can also provide an obj without creating a new VEC3 using three.js
         cubeRef.current.applyTorqueImpulse({
             x: Math.random() - 0.5,
             y: Math.random() - 0.5,
@@ -85,7 +86,7 @@ export default function Experience() {
                     </mesh>
                     <CuboidCollider
                         args={[0.5, 0.5, 0.5]}
-                        mass={500} // this WON'T make the cube fall FASTER, but if you click on it to make it jump, the lower the value is the HIGHER the cube will jump
+                        mass={2} // this WON'T make the cube fall FASTER, but if you click on it to make it jump, the lower the value is the HIGHER the cube will jump
                     />
                 </RigidBody>
 
